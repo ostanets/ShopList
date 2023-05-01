@@ -1,36 +1,18 @@
 package com.example.shoplist.presentation
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
-import java.lang.RuntimeException
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
-
-    class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val shopItemTitle: TextView = view.findViewById(R.id.shopItemTitle)
-        val shopItemCount: TextView = view.findViewById(R.id.shopItemCount)
-    }
-
-    var shopList = listOf<ShopItem>()
-        set(value) {
-            val callback = ShopListDiffCallback(shopList, value)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
+class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
     override fun getItemViewType(position: Int): Int {
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
         return if (shopItem.enabled) {
             ENABLED_SHOP_ITEM
         } else {
@@ -52,9 +34,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         return ShopItemViewHolder(view)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(viewHolder: ShopItemViewHolder, position: Int) {
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
         viewHolder.shopItemTitle.text = shopItem.title
             .plus(" ")
             .plus(shopItem.enabled.toString())
@@ -68,10 +49,6 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         viewHolder.view.setOnClickListener {
             onShopItemClickListener?.invoke(shopItem)
         }
-    }
-
-    override fun getItemCount(): Int {
-        return shopList.size
     }
 
     companion object {
