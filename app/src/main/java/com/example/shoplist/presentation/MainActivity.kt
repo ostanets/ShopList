@@ -7,40 +7,36 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
-    private lateinit var llShopList: LinearLayout
+    private lateinit var shopListAdapter: ShopListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        llShopList = findViewById(R.id.ll_shop_list)
+        setupRecycleView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
-            showList(it)
+            shopListAdapter.shopList = it
         }
     }
 
-    private fun showList(list: List<ShopItem>) {
-        llShopList.removeAllViews()
-        for (shopItem in list) {
-            val layoutId = if (shopItem.enabled) {
-                R.layout.item_shop_enabled
-            } else {
-                R.layout.item_shop_disabled
-            }
-            val view = LayoutInflater.from(this).inflate(layoutId, llShopList, false)
-            val shopItemTitle: TextView = view.findViewById(R.id.shopItemTitle)
-            val shopItemCount: TextView = view.findViewById(R.id.shopItemCount)
-            shopItemTitle.text = shopItem.title
-            shopItemCount.text = shopItem.count.toString()
-            view.setOnLongClickListener {
-                viewModel.toggleEnableStatus(shopItem)
-                true
-            }
-            llShopList.addView(view)
+    private fun setupRecycleView() {
+        val rvShopList = findViewById<RecyclerView>(R.id.shopListRecycleView)
+        shopListAdapter = ShopListAdapter()
+        with(rvShopList) {
+            adapter = shopListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.ENABLED_SHOP_ITEM,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.DISABLED_SHOP_ITEM,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
         }
     }
 }
