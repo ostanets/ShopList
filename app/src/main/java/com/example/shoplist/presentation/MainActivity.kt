@@ -3,13 +3,10 @@ package com.example.shoplist.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
-import com.example.shoplist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
@@ -37,6 +34,42 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.DISABLED_SHOP_ITEM,
                 ShopListAdapter.MAX_POOL_SIZE
             )
+        }
+        setupShopItemLongClickListener()
+        setupShopItemClickListener()
+        setupShopItemSwipeListener(rvShopList)
+    }
+
+    private fun setupShopItemSwipeListener(rvShopList: RecyclerView?) {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.deleteShopItem(shopListAdapter.shopList[viewHolder.adapterPosition])
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(rvShopList)
+    }
+
+    private fun setupShopItemClickListener() {
+        shopListAdapter.onShopItemClickListener = {
+            Log.d("MainActivity", "ShopItem: $it")
+        }
+    }
+
+    private fun setupShopItemLongClickListener() {
+        shopListAdapter.onShopItemLongClickListener = {
+            viewModel.toggleEnableStatus(it)
         }
     }
 }
