@@ -27,8 +27,12 @@
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/text_input_title_hint"
                 android:inputType="textCapSentences"
-                android:hint="@string/text_input_title_hint" />
+                android:textColor="@color/black"
+                android:textColorHighlight="#27006C"
+                android:textColorHint="#27006C"
+                android:textColorLink="#27006C" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -43,8 +47,12 @@
                 android:id="@+id/et_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/text_input_count_hint"
                 android:inputType="number"
-                android:hint="@string/text_input_count_hint" />
+                android:textColor="@color/black"
+                android:textColorHighlight="#27006C"
+                android:textColorHint="#27006C"
+                android:textColorLink="#27006C" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

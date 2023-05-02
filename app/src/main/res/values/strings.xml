@@ -4,4 +4,6 @@
     <string name="text_input_count_hint">Количество</string>
     <string name="save_shop_item_button_text">Сохранить</string>
     <string name="add_shop_item_button_description">Добавить новый товар</string>
+    <string name="title_error_message">Недопустимое название</string>
+    <string name="count_error_message">Недопустимое количество</string>
 </resources>
