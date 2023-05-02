@@ -37,8 +37,6 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCa
     override fun onBindViewHolder(viewHolder: ShopItemViewHolder, position: Int) {
         val shopItem = getItem(position)
         viewHolder.shopItemTitle.text = shopItem.title
-            .plus(" ")
-            .plus(shopItem.enabled.toString())
         viewHolder.shopItemCount.text = shopItem.count.toString()
 
         viewHolder.view.setOnLongClickListener {
